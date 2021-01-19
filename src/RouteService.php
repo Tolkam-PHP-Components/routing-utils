@@ -90,22 +90,22 @@ class RouteService
      * Gets current route url
      *
      * @param string|null $name
-     * @param array       $attrs
-     * @param bool        $absolute
-     * @param bool        $preserveReturnTo
+     * @param array|null  $attrs
+     * @param bool|null   $absolute
+     * @param bool|null   $preserveReturnTo
      *
      * @return string
      */
-    public function getUrl(
+    public function getRouteUrl(
         string $name = null,
         array $attrs = [],
-        bool $absolute = false,
-        bool $preserveReturnTo = false
+        bool $absolute = true,
+        bool $preserveReturnTo = true
     ): string {
         if (!$name) {
             $currentRoute = $this->getRoute();
             $name = $currentRoute->name;
-            $attrs = array_merge($currentRoute->attributes, $attrs);
+            $attrs = array_replace($currentRoute->attributes, $attrs);
         }
         
         $url = $this->generate($name, $attrs);
@@ -136,13 +136,13 @@ class RouteService
         string $redirectRouteName,
         $returnToRouteName = false
     ): ResponseInterface {
-        $location = $this->getUrl($redirectRouteName);
+        $location = $this->getRouteUrl($redirectRouteName);
         
         if (
             $returnToRouteName !== false
             && (is_null($returnToRouteName) || is_string($returnToRouteName))
         ) {
-            $returnTo = $this->getUrl($returnToRouteName);
+            $returnTo = $this->getRouteUrl($returnToRouteName);
         }
         else {
             $returnTo = RouteUtil::getReturnTo($this->request);
