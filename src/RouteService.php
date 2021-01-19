@@ -49,11 +49,41 @@ class RouteService
         }
         
         $matcher = $this->routerContainer->getMatcher();
-        if (($route = $matcher->getMatchedRoute()) || ($route = $matcher->getFailedRoute())) {
+        if ($route = $matcher->getMatchedRoute()) {
+            return $route;
+        }
+        
+        if ($route = $matcher->getFailedRoute()) {
             return $route;
         }
         
         throw new RouteServiceException('Failed to get current route');
+    }
+    
+    /**
+     * Gets route attribute value
+     *
+     * @param string|null $name
+     * @param string      $attribute
+     * @param null        $default
+     *
+     * @return string|null
+     * @throws RouteServiceException
+     */
+    public function getRouteAttribute(?string $name, string $attribute, $default = null): ?string
+    {
+        return $this->getRoute($name)->attributes[$attribute] ?? $default;
+    }
+    
+    /**
+     * Gets current route name
+     *
+     * @return string
+     * @throws RouteServiceException
+     */
+    public function currentRouteName(): string
+    {
+        return $this->getRoute()->name;
     }
     
     /**
