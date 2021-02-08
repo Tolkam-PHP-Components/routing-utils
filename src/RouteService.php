@@ -208,7 +208,12 @@ class RouteService
         bool $raw = false
     ): string {
         $methodName = 'generate' . ($raw ? 'Raw' : '');
-        $attributes = array_map(fn($v) => (string) $v, $attributes);
+        
+        // convert objects to strings
+        $attributes = array_map(
+            fn($v) => is_object($v) ? (string) $v : $v,
+            $attributes
+        );
         
         $generated = $this->routerContainer
             ->getGenerator()
