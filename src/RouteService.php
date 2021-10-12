@@ -41,18 +41,21 @@ class RouteService
      */
     public function getRoute(string $name = null): Route
     {
-        /** @var Route $route */
         if ($name) {
+            /** @var Route $route */
             $route = $this->routerContainer->getMap()->getRoute($name);
             
             return $route;
         }
         
         $matcher = $this->routerContainer->getMatcher();
+        
+        /** @var Route $route */
         if ($route = $matcher->getMatchedRoute()) {
             return $route;
         }
         
+        /** @var Route $route */
         if ($route = $matcher->getFailedRoute()) {
             return $route;
         }
@@ -134,7 +137,7 @@ class RouteService
     public function withRedirect(
         ResponseInterface $response,
         string $redirectRouteName,
-        $returnToRouteName = false
+        bool $returnToRouteName = false
     ): ResponseInterface {
         $location = $this->getRouteUrl($redirectRouteName);
         
